@@ -7,7 +7,7 @@ import java.util.Random;
 public class Minefield extends GridPane {
     private final int rows = 20;
     private final int cols = 20;
-    private final int numberOfMines = 80;
+    private final int numberOfMines = 30;
     private Field[][] buttons;
 
     Minefield(int width, int height){
@@ -17,6 +17,12 @@ public class Minefield extends GridPane {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 buttons[i][j] = new Field(width/cols, height/rows, this.buttons, i, j);
+                if((i+j) % 2 == 1){
+                    buttons[i][j].getStyleClass().add("base-field-light");
+                }
+                else{
+                    buttons[i][j].getStyleClass().add("base-field-dark");
+                }
                 this.add(buttons[i][j], j, i);
             }
         }

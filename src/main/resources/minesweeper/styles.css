@@ -1,0 +1,35 @@
+.base-field-dark{
+    -fx-background-color: #4F8AC6;
+    -fx-text-fill: black;
+    -fx-border-color: #4F8AC6;
+    -fx-border-radius: 0;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+}
+
+.base-field-light{
+    -fx-background-color: #A8D8FF;
+    -fx-text-fill: black;
+    -fx-border-color: #A8D8FF;
+    -fx-border-radius: 0;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+}
+
+.marked-field{
+    -fx-background-color: #FF7F7F;
+    -fx-text-fill: black;
+    -fx-border-color: #FF7F7F;
+    -fx-border-radius: 0;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+}
+
+.revealed-field{
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: black;
+    -fx-border-color: #4CAF50;
+    -fx-border-radius: 0;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+}
