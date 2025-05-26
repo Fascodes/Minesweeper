@@ -11,16 +11,6 @@ import java.io.InputStream;
 
 public class MinesweeperWindow extends Application {
 
-    public void gameOverScreen() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MinesweeperWindow.class.getResource("sweeper-view.fxml"));
-        Scene popupWindow = new Scene(fxmlLoader.load(), 320, 240);
-        Stage popup = new Stage();
-        popup.setScene(popupWindow);
-        popup.setResizable(false);
-        popup.centerOnScreen();
-        popup.show();
-    }
-
     @Override
     public void start(Stage stage) {
         try {

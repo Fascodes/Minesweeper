@@ -10,6 +10,7 @@ public class Field extends Button{
     public boolean revealed = false;
     private boolean marked = false;
     private final Field[][] minefield;
+    private final Minefield parentMinefield;
     public final int xPos;
     public final int yPos;
 
@@ -18,37 +19,39 @@ public class Field extends Button{
     private static final String STYLE_MARKED = "marked-field";
     private static final String STYLE_REVEALED = "revealed-field";
 
-
-
     Field(
             final int CELL_SIZE,
             Field[][] minefield,
             int xPos,
-            int yPos)
+            int yPos,
+            Minefield parentMinefield)
     {
         super();
         this.setPrefWidth(CELL_SIZE);
         this.setPrefHeight(CELL_SIZE);
         this.minefield = minefield;
+        this.parentMinefield = parentMinefield;
         this.xPos = xPos;
         this.yPos = yPos;
         this.setOnMouseClicked(this::handleButtonClick);
     }
 
-    // TODO: Dodac oznaczanie podejrzanych pol, pola odkryte moga zmieniac kolor + wyswietlac wartosc jezeli surroundingbombs > 0
     void handleButtonClick(MouseEvent event){
-        // Left click the tile and check it
+        // Left-click the tile and check it
         if(event.getButton() == MouseButton.PRIMARY){
+            if(this.marked) return; // If field is marked does nothing
             if(this.getContainsMine()){
                 this.setText("💥");
+                this.getStyleClass().setAll("button", "mine-field");
+                parentMinefield.onGameOver(false);
+                revealAllMines();
             }
             else if(!this.marked){
-                // Mozna zaimplementowac algorytm DFS(Depth First Search) do odkrywania pol niezawierajacych bomb, dodano zmienna  boolean revealed
-                // prawdopodobnie niezbedne bedzie dodanie referencji do minefield w konstruktorze oraz koordynatow pola jako zmienna klasy
                 revealFields(this.minefield, this.xPos, this.yPos);
+                checkWinCondition();
             }
         }
-        // Right click the tile and mark it
+        // Right-click the tile and mark it
         else if(event.getButton() == MouseButton.SECONDARY && !this.revealed){
             if(this.marked){
                 if((xPos+yPos) % 2 == 1){
@@ -58,16 +61,15 @@ public class Field extends Button{
                     this.getStyleClass().setAll("button", STYLE_DARK);
                 }
                 this.marked = false;
+                parentMinefield.onFlagToggled(false);
             }
             else{
                 this.getStyleClass().setAll("button", STYLE_MARKED);
                 this.marked = true;
+                parentMinefield.onFlagToggled(true);
             }
         }
-
     }
-
-
 
     // Implementacja DFS - zatrzymuje sie gdy napotka pole z surroundingbombs > 0
     public void revealFields(Field[][] minefield, int xPos, int yPos){
@@ -81,19 +83,76 @@ public class Field extends Button{
         else{
             minefield[xPos][yPos].revealed = true;
             minefield[xPos][yPos].getStyleClass().setAll("button", STYLE_REVEALED);
-            minefield[xPos][yPos].setText(String.valueOf(minefield[xPos][yPos].surroundingBombs));
+            if(minefield[xPos][yPos].surroundingBombs > 0) {
+                minefield[xPos][yPos].setText(String.valueOf(minefield[xPos][yPos].surroundingBombs));
+            }
         }
         if(minefield[xPos][yPos].surroundingBombs > 0){
             return;
         }
 
-        revealFields(minefield, xPos+1, yPos);
-        revealFields(minefield, xPos-1, yPos);
-        revealFields(minefield, xPos, yPos+1);
-        revealFields(minefield, xPos, yPos-1);
+        // Recursively checks all surrounding fields
+        for(int i = -1; i < 2; i++){
+            for(int j = -1; j < 2; j++){
+                if (i == 0 && j == 0) continue; // Skips itself
+                revealFields(minefield, xPos + i, yPos + j);
+            }
+        }
     }
 
+    private void revealAllMines() {
+        for (int i = 0; i < minefield.length; i++) {
+            for (int j = 0; j < minefield[0].length; j++) {
+                if (minefield[i][j].getContainsMine() && !minefield[i][j].revealed) {
+                    minefield[i][j].setText("💣");
+                    minefield[i][j].getStyleClass().setAll("button", "mine-field");
+                }
+            }
+        }
+    }
 
+    private void checkWinCondition() {
+        int revealedCount = 0;
+        int totalFields = minefield.length * minefield[0].length;
+
+        for (int i = 0; i < minefield.length; i++) {
+            for (int j = 0; j < minefield[0].length; j++) {
+                if (minefield[i][j].revealed) {
+                    revealedCount++;
+                }
+            }
+        }
+
+        // Sprawdzenie czy wszystkie pola bez min zostały odkryte
+        int mineCount = 0;
+        for (int i = 0; i < minefield.length; i++) {
+            for (int j = 0; j < minefield[0].length; j++) {
+                if (minefield[i][j].getContainsMine()) {
+                    mineCount++;
+                }
+            }
+        }
+
+        if (revealedCount == totalFields - mineCount) {
+            parentMinefield.onGameOver(true);
+        }
+    }
+
+    public void reset() {
+        this.containsMine = false;
+        this.surroundingBombs = 0;
+        this.revealed = false;
+        this.marked = false;
+        this.setText("");
+
+        // Przywróć oryginalny styl
+        if((xPos+yPos) % 2 == 1){
+            this.getStyleClass().setAll("button", STYLE_LIGHT);
+        }
+        else{
+            this.getStyleClass().setAll("button", STYLE_DARK);
+        }
+    }
 
     public boolean getContainsMine() {
         return containsMine;
