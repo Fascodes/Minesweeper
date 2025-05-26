@@ -48,7 +48,7 @@ public class Field extends Button{
             }
             else if(!this.marked){
                 revealFields(this.minefield, this.xPos, this.yPos);
-                checkWinCondition();
+                parentMinefield.checkWinCondition();
             }
         }
         // Right-click the tile and mark it
@@ -83,6 +83,7 @@ public class Field extends Button{
         else{
             minefield[xPos][yPos].revealed = true;
             minefield[xPos][yPos].getStyleClass().setAll("button", STYLE_REVEALED);
+            parentMinefield.incrementRevealedCount();
             if(minefield[xPos][yPos].surroundingBombs > 0) {
                 minefield[xPos][yPos].setText(String.valueOf(minefield[xPos][yPos].surroundingBombs));
             }
@@ -111,32 +112,7 @@ public class Field extends Button{
         }
     }
 
-    private void checkWinCondition() {
-        int revealedCount = 0;
-        int totalFields = minefield.length * minefield[0].length;
 
-        for (int i = 0; i < minefield.length; i++) {
-            for (int j = 0; j < minefield[0].length; j++) {
-                if (minefield[i][j].revealed) {
-                    revealedCount++;
-                }
-            }
-        }
-
-        // Sprawdzenie czy wszystkie pola bez min zostały odkryte
-        int mineCount = 0;
-        for (int i = 0; i < minefield.length; i++) {
-            for (int j = 0; j < minefield[0].length; j++) {
-                if (minefield[i][j].getContainsMine()) {
-                    mineCount++;
-                }
-            }
-        }
-
-        if (revealedCount == totalFields - mineCount) {
-            parentMinefield.onGameOver(true);
-        }
-    }
 
     public void reset() {
         this.containsMine = false;

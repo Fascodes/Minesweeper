@@ -9,7 +9,8 @@ public class Minefield extends VBox {
     private Field[][] buttons;
     private GameHeader gameHeader;
     private GridPane gridPane;
-    private int rows, cols, bombCount;
+    private int rows, cols, revealedCount, bombCount;
+    private final int totalFields;
     private boolean gameOver = false;
 
     public Minefield(
@@ -22,6 +23,8 @@ public class Minefield extends VBox {
         this.rows = ROWS;
         this.cols = COLS;
         this.bombCount = BOMB_COUNT;
+        this.revealedCount = 0;
+        this.totalFields = ROWS * COLS;
 
         this.setPrefWidth(COLS * CELL_SIZE);
         this.setPrefHeight(ROWS * CELL_SIZE + 60); // +60 dla headera
@@ -102,6 +105,21 @@ public class Minefield extends VBox {
         }
     }
 
+    private void disableAllFields() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                buttons[i][j].setDisable(true);
+            }
+        }
+    }
+
+    public void checkWinCondition() {
+        if (this.revealedCount == this.totalFields - this.bombCount) {
+            this.onGameOver(true);
+        }
+    }
+
+
     public void onFlagToggled(boolean flagAdded) {
         if (!gameOver) {
             gameHeader.updateFlagCount(flagAdded ? 1 : -1);
@@ -109,6 +127,7 @@ public class Minefield extends VBox {
     }
 
     public void onGameOver(boolean won) {
+        disableAllFields();
         gameOver = true;
         gameHeader.setGameOver(won);
     }
@@ -121,10 +140,16 @@ public class Minefield extends VBox {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 buttons[i][j].reset();
+                buttons[i][j].setDisable(false);
             }
         }
 
+        this.revealedCount = 0;
         // Ponownie ustaw miny
         setupMinefield(rows, cols, bombCount);
+    }
+
+    public void incrementRevealedCount(){
+        this.revealedCount++;
     }
 }
