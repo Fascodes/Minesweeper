@@ -69,9 +69,9 @@ public class StartMenuController {
         int totalCells = boardParams[0] * boardParams[1];
 
         switch (difficulty) {
-            case "Niski": return (int)(totalCells * 0.15);
-            case "Średni": return (int)(totalCells * 0.20);
-            case "Wysoki": return (int)(totalCells * 0.25);
+            case "Niski": return (int)(totalCells * 0.10);
+            case "Średni": return (int)(totalCells * 0.15);
+            case "Wysoki": return (int)(totalCells * 0.20);
             default: return (int)(totalCells * 0.15);
         }
     }
