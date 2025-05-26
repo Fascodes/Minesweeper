@@ -5,8 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import minesweeper.Minefield;
-
 public class StartMenuController {
     @FXML
     private ComboBox<String> boardSizeComboBox;
@@ -41,10 +39,11 @@ public class StartMenuController {
 
         // Konwertuj na parametry gry
         int[] boardParams = getBoardParameters(selectedSize);
+        int bombCount = getBombCount(selectedDifficulty, boardParams);
         int cellSize = getCellSize(selectedCellSize);
 
         // Stwórz nową grę
-        Minefield minefield = new Minefield(boardParams[0], boardParams[1], cellSize);
+        Minefield minefield = new Minefield(boardParams[0], boardParams[1], bombCount, cellSize);
         Scene gameScene = new Scene(minefield, boardParams[1] * cellSize, boardParams[0] * cellSize);
 
         // Zastosuj style
@@ -65,6 +64,18 @@ public class StartMenuController {
             default: return new int[]{16, 16};
         }
     }
+
+    private int getBombCount(String difficulty, int[] boardParams) {
+        int totalCells = boardParams[0] * boardParams[1];
+
+        switch (difficulty) {
+            case "Niski": return (int)(totalCells * 0.15);
+            case "Średni": return (int)(totalCells * 0.20);
+            case "Wysoki": return (int)(totalCells * 0.25);
+            default: return (int)(totalCells * 0.15);
+        }
+    }
+
 
     private int getCellSize(String size) {
         switch (size) {

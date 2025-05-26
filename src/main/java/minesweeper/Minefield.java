@@ -5,22 +5,22 @@ import javafx.scene.layout.GridPane;
 import java.util.Random;
 
 public class Minefield extends GridPane {
-    private final int numberOfMines = 30;
     private Field[][] buttons;
 
     public Minefield(
-            final int rows,
-            final int cols,
+            final int ROWS,
+            final int COLS,
+            final int BOMB_COUNT,
             final int CELL_SIZE
     ){
         super();
-        this.setPrefWidth(cols * CELL_SIZE);
-        this.setPrefHeight(rows * CELL_SIZE);
+        this.setPrefWidth(COLS * CELL_SIZE);
+        this.setPrefHeight(ROWS * CELL_SIZE);
 
-        buttons = new Field[rows][cols];
+        buttons = new Field[ROWS][COLS];
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
                 // Initialize respective button
                 buttons[i][j] = new Field(
                         CELL_SIZE,
@@ -37,16 +37,17 @@ public class Minefield extends GridPane {
             }
         }
 
-        setupMinefield(rows, cols);
+        setupMinefield(ROWS, COLS, BOMB_COUNT);
     }
 
     void setupMinefield (
             final int rows,
-            final int cols
+            final int cols,
+            final int BOMB_COUNT
     ){
 
         Random rand = new Random();
-        for (int i = 0; i < numberOfMines; i++){
+        for (int i = 0; i < BOMB_COUNT; i++){
             int randRow = rand.nextInt(rows);
             int randCol = rand.nextInt(cols);
 
