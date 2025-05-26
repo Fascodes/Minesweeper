@@ -21,42 +21,30 @@ public class MinesweeperWindow extends Application {
         popup.show();
     }
 
-    public void restart(Stage stage) {
-        Minefield minefield = new Minefield(1280, 720);
-        Scene scene = new Scene(minefield, 1280, 720);
-        stage.setScene(scene);
-        stage.show();
-    }
-
     @Override
-    public void start(Stage stage) throws IOException {
-        //FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("sweeper-view.fxml"));
-        //Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+    public void start(Stage stage) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(MinesweeperWindow.class.getResource("start-menu.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 300, 350);
 
-        // TODO: Dodac skalowanie pola wedlug rozmiaru okna, mozna wysrodkowac pole
-        Minefield minefield = new Minefield(1280, 720);
-        Scene scene = new Scene(minefield, 1280, 720);
-
-
-        // Load icon from resources/images; skips if failed
-        try (InputStream iconStream = getClass().getResourceAsStream("/images/icon.png")) {
-            if (iconStream == null) {
-                throw new IOException("icon.png not found on classpath");
+            // Ikona
+            try (InputStream iconStream = getClass().getResourceAsStream("/images/icon.png")) {
+                if (iconStream != null) {
+                    stage.getIcons().add(new Image(iconStream));
+                }
+            } catch (Exception e) {
+                System.err.println("Failed to load icon: " + e.getMessage());
             }
-            Image icon = new Image(iconStream);
-            stage.getIcons().add(icon);
-        }
-        catch (Exception e) {
-            // Handle any unexpected exception during image loading
-            System.err.println("Failed to load icon: " + e.getMessage());
-        }
 
-        scene.getStylesheets().add(getClass().getResource("/minesweeper/styles.css").toExternalForm());
-        stage.setTitle("Minesweeper");
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.show();
+            stage.setTitle("Minesweeper - Menu");
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

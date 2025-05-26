@@ -20,10 +20,15 @@ public class Field extends Button{
 
 
 
-    Field(int width, int height, Field[][] minefield, int xPos, int yPos){
+    Field(
+            final int CELL_SIZE,
+            Field[][] minefield,
+            int xPos,
+            int yPos)
+    {
         super();
-        this.setPrefWidth(width);
-        this.setPrefHeight(height);
+        this.setPrefWidth(CELL_SIZE);
+        this.setPrefHeight(CELL_SIZE);
         this.minefield = minefield;
         this.xPos = xPos;
         this.yPos = yPos;
@@ -32,6 +37,7 @@ public class Field extends Button{
 
     // TODO: Dodac oznaczanie podejrzanych pol, pola odkryte moga zmieniac kolor + wyswietlac wartosc jezeli surroundingbombs > 0
     void handleButtonClick(MouseEvent event){
+        // Left click the tile and check it
         if(event.getButton() == MouseButton.PRIMARY){
             if(this.getContainsMine()){
                 this.setText("💥");
@@ -41,7 +47,9 @@ public class Field extends Button{
                 // prawdopodobnie niezbedne bedzie dodanie referencji do minefield w konstruktorze oraz koordynatow pola jako zmienna klasy
                 revealFields(this.minefield, this.xPos, this.yPos);
             }
-        } else if(event.getButton() == MouseButton.SECONDARY && !this.revealed){
+        }
+        // Right click the tile and mark it
+        else if(event.getButton() == MouseButton.SECONDARY && !this.revealed){
             if(this.marked){
                 if((xPos+yPos) % 2 == 1){
                     this.getStyleClass().setAll("button", STYLE_LIGHT);
