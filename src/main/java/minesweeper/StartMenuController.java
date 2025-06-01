@@ -43,8 +43,8 @@ public class StartMenuController {
         int cellSize = getCellSize(selectedCellSize);
 
         // Stwórz nową grę
-        Minefield minefield = new Minefield(boardParams[0], boardParams[1], bombCount, cellSize);
-        Scene gameScene = new Scene(minefield, boardParams[1] * cellSize, boardParams[0] * cellSize);
+        Game game = new Game(boardParams[0], boardParams[1], bombCount, cellSize);
+        Scene gameScene = new Scene(game, boardParams[1] * cellSize, boardParams[0] * cellSize);
 
         // Zastosuj style
         gameScene.getStylesheets().add(getClass().getResource("/minesweeper/styles.css").toExternalForm());
@@ -69,7 +69,7 @@ public class StartMenuController {
         int totalCells = boardParams[0] * boardParams[1];
 
         switch (difficulty) {
-            case "Niski": return (int)(totalCells * 0.10);
+            case "Niski": return (int)(totalCells * 0.01);
             case "Średni": return (int)(totalCells * 0.15);
             case "Wysoki": return (int)(totalCells * 0.20);
             default: return (int)(totalCells * 0.15);
