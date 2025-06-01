@@ -47,7 +47,14 @@ public class StartMenuController {
         Scene gameScene = new Scene(game, boardParams[1] * cellSize, boardParams[0] * cellSize);
 
         // Zastosuj style
-        gameScene.getStylesheets().add(getClass().getResource("/minesweeper/styles.css").toExternalForm());
+        var cssResource = getClass().getResource("/minesweeper/styles.css");
+        if (cssResource != null) {
+            gameScene.getStylesheets().add(cssResource.toExternalForm());
+        } else {
+            System.err.println("Nie można załadować pliku stylów: /minesweeper/styles.css nie został znaleziony");
+            // Opcjonalnie można też rzucić wyjątek, jeśli style są krytyczne dla działania aplikacji
+            // throw new RuntimeException("Nie można załadować wymaganych stylów aplikacji");
+        }
 
         // Pobierz obecne okno i zmień scenę
         Stage stage = (Stage) startGameButton.getScene().getWindow();

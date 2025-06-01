@@ -8,7 +8,7 @@ import javafx.scene.layout.GridPane;
 import java.util.Random;
 
 public class Minefield extends GridPane {
-    private Field[][] buttons;
+    private final Field[][] buttons;
     private int  revealedCount;
     private final int rows, cols, bombCount;
     private final GameOverCallback gameOverCallback;
